@@ -1,17 +1,29 @@
 @import "skins/shared/color";
 
-.infobox {
-	background-color: mix($color-page, #000, 95%);
-	border: 1px solid $color-page-border;
-	clear: right;
-	color: $color-text;
-	float: right;
-	margin-bottom: .5em;
-	margin-left: 1em;
-	padding: .2em;
+//.infobox {
+//	background-color: mix($color-page, #000, 95%);
+//	border: 1px solid $color-page-border;
+//	clear: right;
+//	color: $color-text;
+//	float: right;
+//	margin-bottom: .5em;
+//	margin-left: 1em;
+//	padding: .2em;
+//
+//	&[width='100%'] {	/* fb:8918 - 100% width support */
+//		float: none;
+//		margin-left: 0;
+//	}
+//}
 
-	&[width='100%'] {	/* fb:8918 - 100% width support */
-		float: none;
-		margin-left: 0;
-	}
+.infobox {
+	background-color: #f2f2f2;
+	border: 1px solid #cccccc;
+	clear: right;
+	color: #3a3a3a;
+	font-size: 13px !important;
+	float: right;
+	margin-bottom: 0.5em;
+	margin-left: 1em;
+	padding: 0.2em;
 }
