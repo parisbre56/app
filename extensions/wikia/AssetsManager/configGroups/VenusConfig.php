@@ -236,6 +236,7 @@ $VenusConfig[ 'article_navigation_js' ] = [
 		'//extensions/wikia/ArticleNavigation/scripts/edit.js',
 		'//extensions/wikia/ArticleNavigation/scripts/sticky.js',
 		'//extensions/wikia/ArticleNavigation/scripts/share.js',
+		'//extensions/wikia/ArticleNavigation/scripts/rwa.js',
 		'//extensions/wikia/ArticleNavigation/scripts/init.js',
 	]
 ];

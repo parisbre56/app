@@ -24,6 +24,7 @@ class ArticleNavigationController extends WikiaController {
 
 		$this->response->setTemplateEngine( WikiaResponse::TEMPLATE_ENGINE_MUSTACHE );
 
+		$this->setVal( 'recentWikiActivity', $this->app->renderView('RecentWikiActivity', 'index') );
 		$this->setVal( 'editActionsDropdown', $this->renderEditActions() );
 		$this->setVal( 'share', $app->renderView( 'ArticleNavigationController', 'share' ) );
 		$this->setVal( 'userTools', json_encode( $this->helper->extractDropdownData( $this->generateUserTools() ) ) );

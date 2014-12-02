@@ -78,7 +78,7 @@ $dropdownArrowSize: 10px;
 	@include dropdownWidth();
 
 	.active {
-		.nav-icon {
+		.nav-icon, .rwa-icon {
 			&:before,
 			&:after {
 				content: "";
@@ -134,6 +134,52 @@ $dropdownArrowSize: 10px;
 	.nav-icon:hover {
 		background: $color-buttons;
 		color: $color-button-text;
+	}
+
+	.rwa-icon {
+		display: block;
+		height: 40px;
+		position: relative;
+		width: 40px;
+	}
+
+	.rwa-wrapper {
+		left: 40px;
+		padding-left: 20px;
+		position: absolute;
+		top: 0;
+	}
+
+	.rwa-item {
+		svg {
+			cursor: pointer;
+			height: 40px;
+			width: 40px;
+		}
+
+		.internal {
+			fill: $color-page;
+		}
+		.external {
+			fill: $color-article-navigation-inactive;
+		}
+
+		&.active {
+			.recent-wiki-activity {
+				display: block;
+			}
+		}
+		
+		&.active, &:hover {
+
+			.internal {
+				fill: $color-button-text;
+			}
+
+			.external {
+				fill: $color-buttons;
+			}
+		}
 	}
 }
 
