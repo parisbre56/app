@@ -2611,37 +2611,18 @@ $templates
 		if ( $wgUseAjax ) {
 			# macbre: following files are part of merged JS for following skins - don't load them from here
 			$skinName = get_class( $skin );
-			$skipWikiaSkins = array(
-/*
-				'SkinMonoBook',
-				'SkinUncyclopedia',
-				'SkinMonaco',
-				'SkinAnswers',
-				'SkinCorporate',
-				'SkinCorporateHome',
-				'SkinCorporateHubs',
-				'SkinLyricsMinimal',
-*/
-//				'SkinOasis',
-            );
 
-			if( !in_array( $skinName, $skipWikiaSkins ) ) {
-				$this->addModules( 'mediawiki.legacy.ajax' );
-			}
+			$this->addModules( 'mediawiki.legacy.ajax' );
 
 			wfRunHooks( 'AjaxAddScript', array( &$this ) );
 
 
-			if( !in_array( $skinName, $skipWikiaSkins ) ) {
-				if( $wgAjaxWatch && $this->getUser()->isLoggedIn() ) {
-					$this->addModules( 'mediawiki.action.watch.ajax' );
-				}
+			if( $wgAjaxWatch && $this->getUser()->isLoggedIn() ) {
+				$this->addModules( 'mediawiki.action.watch.ajax' );
 			}
 
-			if( !in_array( $skinName, $skipWikiaSkins ) ) {
-				if ( $wgEnableMWSuggest && !$this->getUser()->getOption( 'disablesuggest', false ) ) {
-					$this->addModules( 'mediawiki.legacy.mwsuggest' );
-				}
+			if ( $wgEnableMWSuggest && !$this->getUser()->getOption( 'disablesuggest', false ) ) {
+				$this->addModules( 'mediawiki.legacy.mwsuggest' );
 			}
 		}
 
@@ -2849,12 +2830,10 @@ $templates
 	 * @return String: HTML fragment
 	 */
 	function getHeadScripts() {
-		global $wgResourceLoaderExperimentalAsyncLoading, $wgEnableVisualEditorExt;
+		global $wgResourceLoaderExperimentalAsyncLoading, $wgEnableNewVisualEditorExt;
 		// Achtung! Achtung!
-		// This is a temporary fix for https://wikia-inc.atlassian.net/browse/VE-688 while we are working
-		// on more permanent and long term solution.
-		if ( !empty( $wgEnableVisualEditorExt ) ) {
-			$extraData = array( 've' => 1 );
+		if ( !empty( $wgEnableNewVisualEditorExt ) ) {
+			$extraData = array( 'newve' => 1 );
 		} else {
 			$extraData = array();
 		}
@@ -3003,8 +2982,9 @@ $templates
 
 	/**
 	 * Add one or more variables to be set in mw.config in JavaScript.
+	 * Wikia change: For WikiaMobile skin, variables have to be whitelisted in WikiaMobile.setup.php
 	 *
-	 * @param $key {String|Array} Key or array of key/value pars.
+	 * @param $keys {String|Array} Key or array of key/value pars.
 	 * @param $value {Mixed} [optional] Value of the configuration variable.
 	 */
 	public function addJsConfigVars( $keys, $value = null ) {

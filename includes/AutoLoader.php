@@ -178,6 +178,7 @@ $wgAutoloadLocalClasses = array(
 	'ProtectionForm' => 'includes/ProtectionForm.php',
 	'QueryPage' => 'includes/QueryPage.php',
 	'QuickTemplate' => 'includes/SkinTemplate.php',
+	'RawMessage' => 'includes/Message.php',
 	'RCCacheEntry' => 'includes/ChangesList.php',
 	'RdfMetaData' => 'includes/Metadata.php',
 	'ReadOnlyError' => 'includes/Exception.php',
@@ -405,9 +406,10 @@ $wgAutoloadLocalClasses = array(
 	'CloneDatabase' => 'includes/db/CloneDatabase.php',
 	'Database' => 'includes/db/DatabaseMysql.php',
 	'DatabaseBase' => 'includes/db/Database.php',
-	'DatabaseIbm_db2' => 'includes/db/DatabaseIbm_db2.php',
 	'DatabaseMssql' => 'includes/db/DatabaseMssql.php',
 	'DatabaseMysql' => 'includes/db/DatabaseMysql.php',
+	'DatabaseMysqlBase' => 'includes/db/DatabaseMysqlBase.php',
+	'DatabaseMysqli' => 'includes/db/DatabaseMysqli.php',
 	'DatabaseOracle' => 'includes/db/DatabaseOracle.php',
 	'DatabasePostgres' => 'includes/db/DatabasePostgres.php',
 	'DatabaseSqlite' => 'includes/db/DatabaseSqlite.php',
@@ -890,13 +892,8 @@ $wgAutoloadLocalClasses = array(
 	'WithoutInterwikiPage' => 'includes/specials/SpecialWithoutinterwiki.php',
 
 	# includes/templates
-	/**
 	'UserloginTemplate' => 'includes/templates/Userlogin.php',
 	'UsercreateTemplate' => 'includes/templates/Usercreate.php',
-	*/
-	'UsercreateTemplate' => 'includes/templates/wikia/Userlogin.php',
-	'UserloginTemplate' => 'includes/templates/wikia/Userlogin.php',
-	'UserAjaxCreateTemplate' => 'includes/templates/wikia/UserAjaxCreate.php',
 
 	# includes/upload
 	'UploadBase' => 'includes/upload/UploadBase.php',
@@ -997,29 +994,7 @@ class AutoLoader {
 		} elseif ( isset( $wgAutoloadClasses[$className] ) ) {
 			$filename = $wgAutoloadClasses[$className];
 		} else {
-			// can't do lookup on whole array!
-			// better to fail and find cases which don't have
-			// correct case then pay performance penalty
 			return false;
-			# Try a different capitalisation
-			# The case can sometimes be wrong when unserializing PHP 4 objects
-			$filename = false;
-			$lowerClass = strtolower( $className );
-
-			foreach ( $wgAutoloadLocalClasses as $class2 => $file2 ) {
-				if ( strtolower( $class2 ) == $lowerClass ) {
-					$filename = $file2;
-				}
-			}
-
-			if ( !$filename ) {
-				if ( function_exists( 'wfDebug' ) ) {
-					wfDebug( "Class {$className} not found; skipped loading\n" );
-				}
-
-				# Give up
-				return false;
-			}
 		}
 
 		# Make an absolute path, this improves performance by avoiding some stat calls

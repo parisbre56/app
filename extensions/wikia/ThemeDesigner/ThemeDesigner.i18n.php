@@ -1252,11 +1252,15 @@ $messages['ko'] = array(
 	'themedesigner-button-save-im-done' => '저장하고 완료',
 	'themedesigner-button-cancel' => '취소',
 	'themedesigner-button-ok' => '확인',
+	'themedesigner-button-upload' => '올리기',
+	'themedesigner-button-upload-wordmark' => '올리기',
 	'themedesigner-default' => '기본',
 	'themedesigner-font' => '글꼴',
 	'themedesigner-size' => '크기',
 	'themedesigner-button-save' => '저장',
 	'themedesigner-dont-use-a-graphic' => '제거',
+	'themedesigner-size-error' => '잘못된 파일 크기',
+	'themedesigner-type-error' => '잘못된 파일 형식',
 	'themedesigner-favicon-heading' => '파비콘',
 	'themedesigner-wodmark-preview' => '미리 보기',
 );
@@ -1614,7 +1618,7 @@ $messages['nl'] = array(
 	'themedesigner-wodmark-preview' => 'Voorvertoning',
 	'themedesigner-wordmark-preview-error' => 'De naam van de wiki mag niet leeg zijn.
 Geef een naam op voor de wiki.',
-	'themedesigner-upload-disabled' => 'Sorry, we hebben uploads tijdelijk uitgeschakeld. Probeer het binnenkort opnieuw om veranderingen te maken.',
+	'themedesigner-upload-disabled' => 'We hebben uploads tijdelijk uitgeschakeld. Probeer het binnenkort opnieuw om veranderingen te maken.',
 );
 
 /** Occitan (occitan)
@@ -1898,6 +1902,7 @@ escreve o nome da wiki para guardar.',
  * @author Caio1478
  * @author Dianakc
  * @author Giro720
+ * @author Jefersonmoraes
  * @author Luckas
  * @author Luckas Blade
  */
@@ -1925,12 +1930,12 @@ $messages['pt-br'] = array(
 	'themedesigner-not-split-background' => 'sem divisão',
 	'themedesigner-rules-not-split-background' => "Se seu gráfico de fundo é maior que $1px você tem uma opção de ''não'' dividir uma imagem.",
 	'themedesigner-transparency' => 'transparência',
-	'themedesigner-tab-theme' => 'Variante',
+	'themedesigner-tab-theme' => 'Tema',
 	'themedesigner-tab-customize' => 'Personalizar',
 	'themedesigner-tab-wordmark' => 'Símbolo',
 	'themedesigner-preview-mode' => 'Modo pré-visualização...',
 	'themedesigner-previous-versions' => 'Versões anteriores',
-	'themedesigner-button-save-im-done' => 'Terminei, gravar',
+	'themedesigner-button-save-im-done' => 'Pronto, salvar',
 	'themedesigner-button-cancel' => 'Cancelar',
 	'themedesigner-pick-a-color' => 'Escolher uma cor',
 	'themedesigner-enter-your-own' => 'Introduzir',
@@ -1948,7 +1953,7 @@ $messages['pt-br'] = array(
 	'themedesigner-button-save' => 'Salvar',
 	'themedesigner-upload-a-graphic' => 'upload de um padrão gráfico',
 	'themedesigner-rules-wordmark' => 'Carregar um arquivo .png que de 250 x 65 pixels ou menos.',
-	'themedesigner-rules-favicon' => 'Envie um arquivo .ico 16x16 pixel. Um favicon é um pequeno ícone que aparece na aba do navegador da sua wiki. [http://comunidade.wikia.com/wiki/Ajuda:Favicon Leia mais.]',
+	'themedesigner-rules-favicon' => 'Envie um arquivo .ico 16x16 pixel. Um favicon é um pequeno ícone que aparece na aba do navegador da sua wikia. [http://comunidade.wikia.com/wiki/Ajuda:Favicon Leia mais.]',
 	'themedesigner-dont-use-a-graphic' => 'remover',
 	'themedesigner-history-item' => '$1 de $2',
 	'themedesigner-button-change-text' => 'Alterar texto',
@@ -1956,12 +1961,12 @@ $messages['pt-br'] = array(
 	'themedesigner-size-error' => 'Tamanho de arquivo incorreto',
 	'themedesigner-dimensions-error' => 'A imagem excede os limites de tamanho',
 	'themedesigner-type-error' => 'Tipo de arquivo incorreto',
-	'themedesigner-unknown-error' => 'Ocorreu um erro que não é possível identificar. Tente novamente, por favor.',
-	'themedesigner-manual-upload-error' => 'Use o Designer de Temas para fazer o upload do wordmark ou fundo da wiki',
+	'themedesigner-unknown-error' => 'Ocorreu um erro que não é possível identificar. Por favor, tente novamente.',
+	'themedesigner-manual-upload-error' => 'Use o Designer de Temas para fazer o upload do wordmark ou fundo da wikia',
 	'themedesigner-favicon-heading' => 'Favicon',
 	'themedesigner-wodmark-preview' => 'Pré-visualizar',
-	'themedesigner-wordmark-preview-error' => 'Ops! O nome da wiki não pode ficar em branco, 
-digite o nome da wiki para salvar.',
+	'themedesigner-wordmark-preview-error' => 'Ops! O nome da wikia não pode ficar em branco, 
+digite o nome da wikia para salvar.',
 	'themedesigner-upload-disabled' => 'Desculpe, nós desativamos os uploads temporariamente. Volte em breve para fazer mudanças',
 );
 

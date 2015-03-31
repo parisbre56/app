@@ -1,4 +1,5 @@
-(function () {
+/* global jQuery, mediaWiki */
+(function (window, $, mw) {
 	'use strict';
 
 	var fbPreferences = (function () {
@@ -8,6 +9,7 @@
 			$connectWrapper,
 			$disconnectWrapper,
 			$disconnectLink,
+			$disconnectButton,
 			$connectLink;
 
 		/**
@@ -19,9 +21,16 @@
 			$connectWrapper = $('#fbConnectPreferences');
 			$disconnectWrapper = $('#fbDisconnectPreferences');
 			$disconnectLink = $('#fbDisconnectLink').find('a');
+			$disconnectButton = $('.fb-disconnect');
 			$connectLink = $('.sso-login-facebook');
 
-			$.loadFacebookAPI(bindEvents);
+			$.loadFacebookSDK()
+				.done(function () {
+					bindEvents();
+				})
+				.fail(facebookError);
+
+			return {};
 		}
 
 		/**
@@ -44,7 +53,10 @@
 				callback: function (data) {
 					if (data.status === 'ok') {
 
-						window.GlobalNotification.show($.msg('fbconnect-preferences-connected'), 'confirm');
+						new window.BannerNotification()
+							.setContent($.msg('fbconnect-preferences-connected'))
+							.setType('confirm')
+							.show();
 
 						window.Wikia.Tracker.track({
 							category: 'user-sign-up',
@@ -89,9 +101,14 @@
 				controller: 'FacebookClient',
 				method: 'disconnectFromFB',
 				format: 'json',
+				data: {token: mw.user.tokens.get('editToken')},
+				type: 'POST',
 				callback: function (data) {
 					if (data.status === 'ok') {
-						window.GlobalNotification.show($.msg(disconnectMsg), 'confirm');
+						new window.BannerNotification()
+							.setType('confirm')
+							.setContent($.msg(disconnectMsg))
+							.show();
 						window.Wikia.Tracker.track({
 							category: 'user-sign-up',
 							trackingMethod: 'both',
@@ -114,6 +131,7 @@
 		function bindEvents() {
 			$connectLink.on('click', connect);
 			$disconnectLink.on('click', disconnect);
+			$disconnectButton.on('click', disconnect);
 		}
 
 		/**
@@ -125,7 +143,39 @@
 				msg = $.msg('oasis-generic-error');
 			}
 
-			window.GlobalNotification.show(msg, 'error');
+			new window.BannerNotification(msg, 'error')
+				.show();
+		}
+
+		function facebookError() {
+			$(document).on('tab-fbconnect-prefstext-click', function () {
+				var $tabContentContainer = $('#mw-prefsection-fbconnect-prefstext');
+
+				// Disable all links within the tab
+				$tabContentContainer
+					.find('a')
+					.css('pointer-events', 'none');
+
+				// Throw an error message up
+				function createModal(uiModal) {
+					var modalConfig = {
+						vars: {
+							id: 'fbErrorModal',
+							size: 'medium',
+							title: $.msg('fbconnect-error-fb-unavailable-title'),
+							content: $.msg('fbconnect-error-fb-unavailable-text')
+						}
+					};
+					uiModal.createComponent(modalConfig, function (errorModal) {
+						errorModal.show();
+					});
+				}
+
+				require(['wikia.ui.factory'], function (uiFactory) {
+					$.when(uiFactory.init('modal'))
+						.then(createModal);
+				});
+			});
 		}
 
 		/**
@@ -145,4 +195,4 @@
 
 	// instantiate singleton on DOM ready
 	$(fbPreferences.getInstance);
-})();
+})(window, jQuery, mediaWiki);

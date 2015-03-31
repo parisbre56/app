@@ -110,7 +110,6 @@ class FacebookClient {
 
 	private function getSessionFromMemcached() {
 		$memc = F::app()->wg->memc;
-		$log = WikiaLogger::instance();
 
 		// Get the access token for this user
 		$accessToken = $memc->get( $this->getTokenMemcKey() );
@@ -122,31 +121,39 @@ class FacebookClient {
 				$session->validate();
 				$this->session = $session;
 			} catch ( \Exception $ex ) {
-				$log->warning( __CLASS__ . ': Invalid Facebook session found', [
-					'fbUserId' => $this->facebookUserId,
-					'method' => __METHOD__,
-					'message' => $ex->getMessage(),
-				] );
+				$this->logInvalidSession( __METHOD__, $ex->getMessage() );
 			}
 		}
 	}
 
 	private function getSessionFromCookie() {
 		$memc = F::app()->wg->memc;
-		$log = WikiaLogger::instance();
-
 		$session = $this->facebookAPI->getSession();
+
+		if ( empty( $session ) ) {
+			$this->logInvalidSession( __METHOD__, 'Session object empty' );
+			return;
+		}
+
 		try {
 			$session->validate();
 			$this->session = $session;
 			$memc->set( $this->getTokenMemcKey(), $session->getAccessToken(), self::TOKEN_TTL );
 		} catch ( \Exception $ex ) {
-			$log->warning( __CLASS__ . ': Invalid Facebook session found', [
-				'fbUserId' => $this->facebookUserId,
-				'method' => __METHOD__,
-				'message' => $ex->getMessage(),
-			] );
+			$this->logInvalidSession( __METHOD__, $ex->getMessage() );
 		}
+	}
+
+	/**
+	 * @param string $method
+	 * @param string $message
+	 */
+	private function logInvalidSession( $method, $message ) {
+		WikiaLogger::instance()->warning( __CLASS__ . ': Invalid Facebook session found', [
+			'fbUserId' => $this->facebookUserId,
+			'method' => $method,
+			'message' => $message,
+		] );
 	}
 
 	private function getTokenMemcKey() {
@@ -226,41 +233,6 @@ class FacebookClient {
 	}
 
 	/**
-	 * Same as FacebookClient::getUserInfo but returns the data as an array rather than a Facebook\GraphUser object.
-	 *
-	 * @param int $userId
-	 *
-	 * @return array
-	 */
-	public function getUserInfoAsArray( $userId = 0 ) {
-		$userInfo = $this->getUserInfo( $userId );
-		if ( ! $userInfo instanceof Facebook\GraphUser ) {
-			return [];
-		}
-
-		$properties = [
-			'email',
-			'first_name',
-			'middle_name',
-			'last_name',
-			'gender',
-			'link',
-			'locale',
-			'name',
-			'timezone',
-			'updated_time',
-			'verified'
-		];
-		$data = [];
-
-		foreach ( $properties as $prop ) {
-			$data[ $prop ] = $userInfo->getProperty( $prop );
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Returns what Facebook reports as the full user name for the current user.
 	 *
 	 * @param int $user
@@ -270,6 +242,21 @@ class FacebookClient {
 	public function getFullName( $user = 0 ) {
 		$userInfo = $this->getUserInfo( $user );
 		return $userInfo->getName();
+	}
+
+	/**
+	 * Returns user's email address from Facebook
+	 *
+	 * @param int $userId Facebook User id
+	 * @return string|null email address if exists
+	 */
+	public function getEmail( $userId ) {
+		$userInfo = $this->getUserInfo( $userId );
+		if ( !$userInfo ) {
+			return null;
+		}
+
+		return $userInfo->getProperty( 'email' );
 	}
 
 	/**
@@ -378,8 +365,6 @@ class FacebookClient {
 			!$title instanceof Title ||
 			$title->isSpecial( 'Userlogout' ) ||
 			$title->isSpecial( 'Signup' ) ||
-			$title->isSpecial( 'Connect' ) ||
-			$title->isSpecial( 'FacebookConnect' ) ||
 			$title->isSpecial( 'UserLogin' )
 		);
 	}

@@ -16,15 +16,13 @@ module.exports = function (config) {
 	config.set({
 		exclude: [
 			'resources/wikia/ui_components/**/Gruntfile.js',
-			'resources/wikia/ui_components/**/node_modules/**/*.js',
+			'resources/wikia/ui_components/**/node_modules/**/*.js'
 		],
 		files: [
-			'tests/lib/jasmine/jasmine.async.js',
-			'tests/lib/jasmine/jasmine.dataprovider.js',
-
 			'resources/wikia/libraries/define.mock.js',
 			'tests/lib/jasmine/helpers.js',
 			'resources/jquery/jquery-1.8.2.js',
+			'resources/wikia/polyfills/bind.js',
 
 			//JSMessages
 			'extensions/wikia/JSMessages/js/JSMessages.js',
@@ -67,6 +65,8 @@ module.exports = function (config) {
 
 			// Performance
 			'extensions/wikia/Bucky/js/spec/bucky.mock.js',
+			'extensions/wikia/Bucky/js/bucky_resources_timing.js',
+			'extensions/wikia/Bucky/js/spec/*.spec.js',
 
 			//UI Repo JS API
 			'resources/wikia/modules/uicomponent.js',
@@ -83,6 +83,7 @@ module.exports = function (config) {
 			'extensions/wikia/AdEngine/js/AdConfigMobile.js',
 			'extensions/wikia/AdEngine/js/AdContext.js',
 			'extensions/wikia/AdEngine/js/AdDecoratorPageDimensions.js',
+			'extensions/wikia/AdEngine/js/AdDecoratorLegacyParamFormat.js',
 			'extensions/wikia/AdEngine/js/AdEngine2.js',
 			'extensions/wikia/AdEngine/js/AdLogicDartSubdomain.js',
 			'extensions/wikia/AdEngine/js/AdLogicHighValueCountry.js',
@@ -93,14 +94,13 @@ module.exports = function (config) {
 			'extensions/wikia/AdEngine/js/AdProviderEvolve.js',
 			'extensions/wikia/AdEngine/js/AdProviderLater.js',
 			'extensions/wikia/AdEngine/js/AdProviderLiftium.js',
-			'extensions/wikia/AdEngine/js/AdProviderNull.js',
+			'extensions/wikia/AdEngine/js/AdTracker.js',
 			'extensions/wikia/AdEngine/js/DartUrl.js',
 			'extensions/wikia/AdEngine/js/EventDispatcher.js',
 			'extensions/wikia/AdEngine/js/EvolveHelper.js',
 			'extensions/wikia/AdEngine/js/EvolveSlotConfig.js',
-			'extensions/wikia/AdEngine/js/GptSlotConfig.js',
+			'extensions/wikia/AdEngine/js/lookup/*.js',
 			'extensions/wikia/AdEngine/js/MessageListener.js',
-			'extensions/wikia/AdEngine/js/AdTracker.js',
 			'extensions/wikia/AdEngine/js/WikiaDartHelper.js',
 			'extensions/wikia/AdEngine/js/WikiaDartVideoHelper.js',
 			'extensions/wikia/AdEngine/js/WikiaGptAdDetect.js',
@@ -189,7 +189,13 @@ module.exports = function (config) {
 			'extensions/wikia/MediaGallery/scripts/views/media.js',
 			'extensions/wikia/MediaGallery/scripts/views/toggler.js',
 			'extensions/wikia/MediaGallery/scripts/views/gallery.js',
-			'extensions/wikia/MediaGallery/scripts/spec/**/*.spec.js'
+			'extensions/wikia/MediaGallery/scripts/spec/**/*.spec.js',
+
+			// User Login and Signup
+			'extensions/wikia/UserLogin/js/MarketingOptIn.js',
+			'extensions/wikia/UserLogin/js/spec/MarketingOptIn.spec.js',
+			'extensions/wikia/UserLogin/js/UserBaseAjaxForm.js',
+			'extensions/wikia/UserLogin/js/spec/UserBaseAjaxForm.spec.js',
 		]
 	});
 };

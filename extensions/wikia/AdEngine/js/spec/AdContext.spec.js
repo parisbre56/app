@@ -1,4 +1,4 @@
-/*global describe, it, modules, expect*/
+/*global describe, it, modules, expect, spyOn*/
 /*jshint maxlen:200*/
 describe('AdContext', function () {
 	'use strict';
@@ -11,15 +11,19 @@ describe('AdContext', function () {
 		var adContext;
 
 		adContext = modules['ext.wikia.adEngine.adContext']({}, {}, geoMock, {});
-		expect(adContext.getContext().opts).toEqual({});
+		// TODO: clean up in ADEN-1785
+		//expect(adContext.getContext().opts).toEqual({});
 		expect(adContext.getContext().targeting).toEqual({});
-		expect(adContext.getContext().providers).toEqual({});
+		// TODO: clean up in ADEN-1785
+		//expect(adContext.getContext().providers).toEqual({});
 		expect(adContext.getContext().forceProviders).toEqual({});
 
 		adContext = modules['ext.wikia.adEngine.adContext']({ads: {context: {}}}, {}, geoMock, {});
-		expect(adContext.getContext().opts).toEqual({});
+		// TODO: clean up in ADEN-1785
+		//expect(adContext.getContext().opts).toEqual({});
 		expect(adContext.getContext().targeting).toEqual({});
-		expect(adContext.getContext().providers).toEqual({});
+		// TODO: clean up in ADEN-1785
+		//expect(adContext.getContext().providers).toEqual({});
 		expect(adContext.getContext().forceProviders).toEqual({});
 	});
 
@@ -126,6 +130,75 @@ describe('AdContext', function () {
 		adContext = modules['ext.wikia.adEngine.adContext']({},  {}, geoMock, {
 			wgAdDriverAlwaysCallDartInCountries: ['YY']
 		});
-		expect(adContext.getContext().opts.alwaysCallDart).toBeFalsy();
+
+		// TODO: clean up in ADEN-1785
+		//expect(adContext.getContext().opts.alwaysCallDart).toBeFalsy();
+	});
+
+	it('makes targeting.enableKruxTargeting false when disaster recovery instant global variable is set to true', function () {
+		var adContext,
+			getWindowMock = function() {
+				return {ads: {
+					context: {
+						targeting: {
+							enableKruxTargeting: true
+						}
+					}
+				}};
+			};
+
+		adContext = modules['ext.wikia.adEngine.adContext'](getWindowMock(), {}, geoMock, {});
+		expect(adContext.getContext().targeting.enableKruxTargeting).toBeTruthy();
+
+		adContext = modules['ext.wikia.adEngine.adContext'](getWindowMock(), {}, geoMock, {
+			wgSitewideDisableKrux: false
+		});
+		expect(adContext.getContext().targeting.enableKruxTargeting).toBeTruthy();
+
+		adContext = modules['ext.wikia.adEngine.adContext'](getWindowMock(),  {}, geoMock, {
+			wgSitewideDisableKrux: true
+		});
+		expect(adContext.getContext().targeting.enableKruxTargeting).toBeFalsy();
+
+		adContext = modules['ext.wikia.adEngine.adContext'](getWindowMock(), {}, geoMock, {
+			wgSitewideDisableKrux: 0
+		});
+		expect(adContext.getContext().targeting.enableKruxTargeting).toBeTruthy();
+
+		adContext = modules['ext.wikia.adEngine.adContext'](getWindowMock(),  {}, geoMock, {
+			wgSitewideDisableKrux: 1
+		});
+		expect(adContext.getContext().targeting.enableKruxTargeting).toBeFalsy();
+	});
+
+	it('makes providers.remnantGptMobile true when country in instantGlobals.wgAdDriverAlwaysCallDartInCountriesMobile', function () {
+		var adContext;
+
+		adContext = modules['ext.wikia.adEngine.adContext']({}, {}, geoMock, {
+			wgAdDriverAlwaysCallDartInCountriesMobile: ['XX']
+		});
+		expect(adContext.getContext().providers.remnantGptMobile).toBeTruthy();
+
+		adContext = modules['ext.wikia.adEngine.adContext']({},  {}, geoMock, {
+			wgAdDriverAlwaysCallDartInCountriesMobile: ['YY']
+		});
+		// TODO: clean up in ADEN-1785
+		//expect(adContext.getContext().providers.remnantGptMobile).toBeFalsy();
+	});
+
+	it('calls whoever registered with addCallback each time setContext is called', function () {
+		var adContext,
+			mocks = {
+				callback: function () {
+					return;
+				}
+			};
+
+		spyOn(mocks, 'callback');
+
+		adContext = modules['ext.wikia.adEngine.adContext']({}, {}, geoMock, {});
+		adContext.addCallback(mocks.callback);
+		adContext.setContext({});
+		expect(mocks.callback).toHaveBeenCalled();
 	});
 });

@@ -1,39 +1,17 @@
 /*global define*/
 define('ext.wikia.adEngine.provider.remnantGptMobile', [
-	'wikia.log',
-	'wikia.document',
-	'ext.wikia.adEngine.slotTweaker',
-	'ext.wikia.adEngine.wikiaGptHelper',
-	'ext.wikia.adEngine.gptSlotConfig'
-], function (log, document, slotTweaker, wikiaGpt, gptSlotConfig) {
+	'ext.wikia.adEngine.provider.factory.wikiaGpt'
+], function (factory) {
 	'use strict';
 
-	var logGroup = 'ext.wikia.adEngine.provider.remnantGptMobile',
-		slotMap = gptSlotConfig.getConfig('mobile_remnant');
-
-	function canHandleSlot(slotname) {
-		return !!slotMap[slotname];
-	}
-
-	function fillInSlot(slotname, success, hop) {
-		log(['fillInSlot', slotname], 5, logGroup);
-
-		function hopToNull() {
-			hop({method: 'hop'});
+	return factory.createProvider(
+		'ext.wikia.adEngine.provider.remnantGptMobile',
+		'RemnantGptMobile',
+		'mobile_remnant',
+		{
+			MOBILE_TOP_LEADERBOARD:     {size: '320x50,1x1'},
+			MOBILE_IN_CONTENT:          {size: '300x250,1x1'},
+			MOBILE_PREFOOTER:           {size: '300x250,1x1'}
 		}
-
-		function showAdAndCallSuccess() {
-			document.getElementById(slotname).className += ' show';
-			success();
-		}
-
-		wikiaGpt.pushAd(slotname, showAdAndCallSuccess, hopToNull, 'mobile_remnant');
-		wikiaGpt.flushAds();
-	}
-
-	return {
-		name: 'RemnantGptMobile',
-		canHandleSlot: canHandleSlot,
-		fillInSlot: fillInSlot
-	};
+	);
 });

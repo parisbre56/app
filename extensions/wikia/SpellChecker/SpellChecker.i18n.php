@@ -217,6 +217,13 @@ $messages['fr'] = array(
 	'spellchecker-info-spellcheck-suggestions' => 'Suggestions d’orthographe pour « $1 » : $2',
 );
 
+/** Western Frisian (Frysk)
+ * @author Robin0van0der0vliet
+ */
+$messages['fy'] = array(
+	'spellchecker-info-spellcheck-languages' => 'Taal',
+);
+
 /** Galician (galego)
  * @author Toliño
  */
@@ -297,17 +304,18 @@ $messages['kn'] = array(
 $messages['ko'] = array(
 	'spellchecker-info-spellcheck-languages' => '언어',
 	'spellchecker-info-spellcheck-submit' => '맞춤법 검사',
+	'spellchecker-info-spellcheck-suggestions' => '"$1"에 대한 스펠링 추천: $2',
 );
 
 /** Colognian (Ripoarisch)
  * @author Purodha
  */
 $messages['ksh'] = array(
-	'spellchecker-info-languages' => 'De verfööschbaare Schprooche ($1)',
+	'spellchecker-info-languages' => 'De verfööschbaare Schprohche ($1)',
 	'spellchecker-info-provider' => 'Aanbeeder',
 	'spellchecker-info-dictionaries' => 'de verfööschbaare Wööterbööscher',
 	'spellchecker-info-spellcheck-text' => 'Dä Täx zom Prööve',
-	'spellchecker-info-spellcheck-languages' => 'Schprooch',
+	'spellchecker-info-spellcheck-languages' => 'Schprohch',
 	'spellchecker-info-spellcheck-submit' => 'de Ottojrafih prööve',
 	'spellchecker-info-spellcheck-is-correct' => 'Dat Woot „$1“ es reschtesch jeschrevve.',
 );

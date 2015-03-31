@@ -1,7 +1,6 @@
 @import "skins/shared/color";
 @import "skins/shared/mixins/clearfix";
 @import "skins/shared/mixins/gradient";
-@import "skins/shared/mixins/box-sizing";
 @import "WikiaHubsColors";
 @import 'Explore';
 @import 'HubsPopularVideos';
@@ -70,13 +69,13 @@ $wikiahubs-line-height: 16px;
 			width: 20px;
 		}
 		.facebook {
-			background-image: url("/extensions/wikia/WikiaHubsV3/images/fb.png"); /* base64 */
+			background-image: url("/extensions/wikia/WikiaHubsV3/images/fb.png"); /* inline */
 		}
 		.twitter {
-			background-image: url("/extensions/wikia/WikiaHubsV3/images/twitter.png"); /* base64 */
+			background-image: url("/extensions/wikia/WikiaHubsV3/images/twitter.png"); /* inline */
 		}
 		.gplus {
-			background-image: url("/extensions/wikia/WikiaHubsV3/images/gplus.png"); /* base64 */
+			background-image: url("/extensions/wikia/WikiaHubsV3/images/gplus.png"); /* inline */
 		}
 	}
 }
@@ -176,17 +175,18 @@ $wikiahubs-line-height: 16px;
 }
 
 .suggestArticleDialogModal {
-  input[name=articleurl],
-  textarea[name=reason] {
-	@include box-sizing;
+	input[name=articleurl],
+	textarea[name=reason] {
+		box-sizing: border-box;
 
-	margin-bottom: 10px;
-	padding: 7px;
-	width: 100%;
-  }
-  section.hidden {
-	display: none;
-  }
+		margin-bottom: 10px;
+		padding: 7px;
+		width: 100%;
+	}
+
+	section.hidden {
+		display: none;
+	}
 }
 
 .WikiaGrid {

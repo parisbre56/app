@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Hooks for Message Wall.
+ *
+ * All of these hooks will be executed when Forums are enabled
+ * even if Message Wall is disabled, so appropriate checks are
+ * needed if the hook should only take effect if Wall is enabled.
+ */
 class WallHooksHelper {
 	const RC_WALL_COMMENTS_MAX_LEN = 50;
 	const RC_WALL_SECURENAME_PREFIX = 'WallMessage_';
@@ -803,7 +810,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method doesn't let display flags for message wall replies (they are displayed only for messages from message wall)
+	 * This method doesn't let display flags for message wall replies (they are displayed only for messages from message wall)
 	 *
 	 * @param ChangesList $list
 	 * @param string $flags
@@ -839,7 +846,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method shows link to message wall thread page
+	 * This method shows link to message wall thread page
 	 *
 	 * @param ChangesList $list
 	 * @param string $articleLink
@@ -917,7 +924,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method doesn't let display diff history links
+	 * This method doesn't let display diff history links
 	 *
 	 * @param ChangesList $list
 	 * @param $diffLink
@@ -1000,7 +1007,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method doesn't let display rollback link for message wall inputs
+	 * This method doesn't let display rollback link for message wall inputs
 	 *
 	 * @param ChangesList $list
 	 * @param string $s
@@ -1022,7 +1029,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method creates comment to a recent change line
+	 * This method creates comment to a recent change line
 	 *
 	 * @param ChangesList $list
 	 * @param RecentChange $rc
@@ -1063,7 +1070,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method creates comment about revision deletion of a message on message wall
+	 * This method creates comment about revision deletion of a message on message wall
 	 *
 	 * @param ChangesList $list
 	 * @param RecentChange $rc
@@ -1129,7 +1136,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method clears or leaves as it was the text which is being send as a content of <li /> elements in RC page
+	 * This method clears or leaves as it was the text which is being send as a content of <li /> elements in RC page
 	 *
 	 * @param $changelist
 	 * @param string $s
@@ -1178,7 +1185,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method decides rather put a log information about deletion or not
+	 * This method decides rather put a log information about deletion or not
 	 *
 	 * @param WikiPage $wikipage a referance to WikiPage instance
 	 * @param string $logType a referance to string with type of log
@@ -1219,7 +1226,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting recent changes for Wall
 	 *
-	 * @desc This method decides rather put a log information about restored article or not
+	 * This method decides rather put a log information about restored article or not
 	 *
 	 * @param PageArchive $pageArchive a referance to Article instance
 	 * @param LogPage $logPage a referance to LogPage instance
@@ -1331,7 +1338,7 @@ class WallHooksHelper {
 	/**
 	 * @brief Adjusting blocks on Enhanced Recent Changes page
 	 *
-	 * @desc Changes $secureName which is an array key in RC cache by which blocks on enchance RC page are displayed
+	 * Changes $secureName which is an array key in RC cache by which blocks on enchance RC page are displayed
 	 *
 	 * @param ChangesList $changesList
 	 * @param string $secureName
@@ -1501,9 +1508,9 @@ class WallHooksHelper {
 		if( $watchTitle instanceof Title ) {
 			$wl = new WatchedItem;
 			$wl->mTitle = $watchTitle;
-			$wl->id = $user->getId();
-			$wl->ns = $watchTitle->getNamespace();
-			$wl->ti = $watchTitle->getDBkey();
+			$wl->userID = $user->getId();
+			$wl->nameSpace = $watchTitle->getNamespace();
+			$wl->databaseKey = $watchTitle->getDBkey();
 
 			if( $action === 'add' ) {
 				$wl->addWatch();
@@ -1648,7 +1655,7 @@ class WallHooksHelper {
 
 	/**
 	 * @brief Collects data basing on RC object or std object
-	 * @desc Those lines of code were used a lot in this class. Better keep them in one place.
+	 * Those lines of code were used a lot in this class. Better keep them in one place.
 	 *
 	 * @param RecentChanges $rc
 	 * @param Object $row
@@ -1715,7 +1722,7 @@ class WallHooksHelper {
 	}
 
 	/**
-	 * @desc Changes fields in a DifferenceEngine instance to display correct content in <title /> tag
+	 * Changes fields in a DifferenceEngine instance to display correct content in <title /> tag
 	 *
 	 * @param DifferenceEngine $differenceEngine
 	 * @param Revivion $oldRev
@@ -1739,7 +1746,7 @@ class WallHooksHelper {
 	}
 
 	/**
-	 * @desc Changes fields in a PageHeaderModule instance to display correct content in <h1 /> and <h2 /> tags
+	 * Changes fields in a PageHeaderModule instance to display correct content in <h1 /> and <h2 /> tags
 	 *
 	 * @param PageHeaderModule $pageHeaderModule
 	 * @param int $ns
@@ -1767,7 +1774,7 @@ class WallHooksHelper {
 	}
 
 	/**
-	 * @desc Helper method which gets meta title from an WallMessage instance; used in WallHooksHelper::onDiffViewHeader() and WallHooksHelper::onPageHeaderEditPage()
+	 * Helper method which gets meta title from an WallMessage instance; used in WallHooksHelper::onDiffViewHeader() and WallHooksHelper::onPageHeaderEditPage()
 	 * @param Title $title
 	 * @param mixed $wmRef a variable which value will be created WallMessage instance
 	 *
@@ -1808,7 +1815,7 @@ class WallHooksHelper {
 	}
 
 	/**
-	 * @desc Changes link from User_talk: page to Message_wall: page of the user
+	 * Changes link from User_talk: page to Message_wall: page of the user
 	 *
 	 * @param int $id id of user who's contributions page is displayed
 	 * @param Title $nt instance of Title object of the page
@@ -1838,7 +1845,7 @@ class WallHooksHelper {
 	}
 
 	/**
-	 * @desc Changes user talk page link to user's message wall link added during MW1.19 migration
+	 * Changes user talk page link to user's message wall link added during MW1.19 migration
 	 *
 	 * @param integer $userId
 	 * @param string $userText
@@ -2002,7 +2009,7 @@ class WallHooksHelper {
 	}
 
 	/**
-	 * @desc Adds necessary tables if Wall or Forum has just been enabled in Special:WikiFeatures
+	 * Adds necessary tables if Wall or Forum has just been enabled in Special:WikiFeatures
 	 *
 	 * @param String $name
 	 * @param String $val
@@ -2193,7 +2200,7 @@ class WallHooksHelper {
 	}
 
 	/**
-	 * @desc Makes sure we don't send unnecessary ArticleComments links to purge
+	 * Makes sure we don't send unnecessary ArticleComments links to purge
 	 *
 	 * @param Title $title
 	 * @param String[] $urls
@@ -2204,6 +2211,25 @@ class WallHooksHelper {
 		if( $title->inNamespaces( NS_USER_WALL, NS_USER_WALL_MESSAGE, NS_USER_WALL_MESSAGE_GREETING ) ) {
 			// CONN-430: Resign from default ArticleComment purges
 			$urls = [];
+		}
+
+		return true;
+	}
+
+	/**
+	 * Convert talk page links to wall page links for wall enabled wikis
+	 *
+	 * @param Title $title
+	 * @param Title $talkPageTitle
+	 *
+	 * @return bool
+	 */
+	public static function onGetTalkPage( Title $title, Title &$talkPageTitle ) {
+		if ( !empty( F::app()->wg->EnableWallExt )
+			&& !$title->isSubpage()
+			&& $title->getNamespace() == NS_USER
+		) {
+			$talkPageTitle = Title::makeTitle( NS_USER_WALL, $title->getDBkey() );
 		}
 
 		return true;

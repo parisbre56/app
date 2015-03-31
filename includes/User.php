@@ -57,6 +57,15 @@ class PasswordError extends MWException {
  * of the database.
  */
 class User {
+
+	# WIKIA CHANGE BEGIN
+	# adamk@wikia-inc.com
+	/**
+	 * Traits extending the class
+	 */
+	use PowerUserTrait;
+	# WIKIA CHANGE END
+
 	/**
 	 * Global constants made accessible as class constants so that autoloader
 	 * magic can be used.
@@ -3360,7 +3369,7 @@ class User {
 	 * @param $password String: user password.
 	 * @return Boolean: True if the given password is correct, otherwise False.
 	 */
-	public function checkPassword( $password ) {
+	public function checkPassword( $password, &$errorMessageKey = null ) {
 		global $wgAuth, $wgLegacyEncoding;
 		$this->load();
 
@@ -3372,6 +3381,15 @@ class User {
 		if( !$this->isValidPassword( $password ) ) {
 			return false;
 		}
+
+		// Wikia change - begin - @author: wladek
+		// Helios integration
+		$result = null;
+		wfRunHooks( 'UserCheckPassword', [ $this->mId, $this->mName, $this->mPassword, $password, &$result, &$errorMessageKey ] );
+		if ( $result !== null ) {
+			return $result;
+		}
+		// Wikia change - end
 
 		if( $wgAuth->authenticate( $this->getName(), $password ) ) {
 			return true;
@@ -4240,21 +4258,24 @@ class User {
 		$type = substr( $hash, 0, 3 );
 
 		$result = false;
+
 		if( !wfRunHooks( 'UserComparePasswords', array( &$hash, &$password, &$userId, &$result ) ) ) {
 			return $result;
 		}
 
 		if ( $type == ':A:' ) {
 			# Unsalted
-			return md5( $password ) === substr( $hash, 3 );
+			$bCheck = md5( $password ) === substr( $hash, 3 );
 		} elseif ( $type == ':B:' ) {
 			# Salted
 			list( $salt, $realHash ) = explode( ':', substr( $hash, 3 ), 2 );
-			return md5( $salt.'-'.md5( $password ) ) === $realHash;
+			$bCheck = md5( $salt.'-'.md5( $password ) ) === $realHash;
 		} else {
 			# Old-style
-			return self::oldCrypt( $password, $userId ) === $hash;
+			$bCheck = self::oldCrypt( $password, $userId ) === $hash;
 		}
+
+		return $bCheck;
 	}
 
 	/**

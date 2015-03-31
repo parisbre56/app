@@ -8,6 +8,7 @@ use Wikia\Search\Config;
 use Wikia\Search\QueryService\Factory;
 use Wikia\Search\QueryService\DependencyContainer;
 use Wikia\Util\GlobalStateWrapper;
+use Wikia\Logger\WikiaLogger;
 
 class ArticlesApiController extends WikiaApiController {
 
@@ -357,18 +358,20 @@ class ArticlesApiController extends WikiaApiController {
 			$ns = array_unique( $ns );
 		}
 
-		$key = self::getCacheKey( self::NEW_ARTICLES_CACHE_ID, '', [ implode( '-', $ns ) , $minArticleQuality ] );
+		$key = self::getCacheKey( self::NEW_ARTICLES_CACHE_ID, '', [ implode( '-', $ns ) , $minArticleQuality, $limit ] );
 		$results = $this->wg->Memc->get( $key );
 		if ( $results === false ) {
-			$solrResults = $this->getNewArticlesFromSolr( $ns, self::MAX_NEW_ARTICLES_LIMIT, $minArticleQuality );
+			$solrResults = $this->getNewArticlesFromSolr( $ns, $limit, $minArticleQuality );
 			if ( empty( $solrResults ) ) {
 				$results = [];
 			} else {
 				$articles = array_keys( $solrResults );
+				$articles = array_slice( $articles, 0, $limit );
+
 				$rev = new RevisionService();
 				$revisions = $rev->getFirstRevisionByArticleId( $articles );
 				$creators = $this->getUserDataForArticles( $articles, $revisions );
-				$thumbs = $this->getArticlesThumbnails( array_keys( $solrResults ) );
+				$thumbs = $this->getArticlesThumbnails( $articles );
 
 				$results = [];
 				foreach ( $solrResults as $id => $item ) {
@@ -391,7 +394,6 @@ class ArticlesApiController extends WikiaApiController {
 			throw new NotFoundApiException( 'No members' );
 		}
 
-		$results = array_slice( $results, 0, $limit );
 		$this->setResponseData(
 			[ 'items' => $results, 'basepath' => $this->wg->Server ],
 			[ 'imgFields'=> 'thumbnail', 'urlFields' => [ 'thumbnail', 'url', 'avatar' ] ],
@@ -666,6 +668,7 @@ class ArticlesApiController extends WikiaApiController {
 		$articles = is_array( $articleIds ) ? $articleIds : [ $articleIds ];
 		$ids = [];
 		$collection = [];
+		$resultingCollectionIds = [];
 		$titles = [];
 		foreach ( $articles as $i ) {
 			//data is cached on a per-article basis
@@ -677,6 +680,7 @@ class ArticlesApiController extends WikiaApiController {
 				$ids[] = $i;
 			} else {
 				$collection[$i] = $cache;
+				$resultingCollectionIds []= $i;
 			}
 		}
 
@@ -693,6 +697,7 @@ class ArticlesApiController extends WikiaApiController {
 				}
 			}
 		}
+
 		if ( !empty( $titles ) ) {
 			foreach ( $titles as $t ) {
 				$fileData = [];
@@ -724,8 +729,16 @@ class ArticlesApiController extends WikiaApiController {
 					$collection[$id]['comments'] = ( class_exists( 'ArticleCommentList' ) ) ? ArticleCommentList::newFromTitle( $t )->getCountAllNested() : false;
 					//add file data
 					$collection[$id] = array_merge( $collection[ $id ], $fileData );
-					$articles[] = $id;
+					$resultingCollectionIds []= $id;
 					$this->wg->Memc->set( self::getCacheKey( $id, self::DETAILS_CACHE_ID ), $collection[$id], 86400 );
+				} else {
+					$dataLog = [
+						'titleText' => $t->getText(),
+						'articleId' => $t->getArticleID(),
+						'revId' => $revId
+					];
+
+					WikiaLogger::instance()->info( 'No revision found for article', $dataLog );
 				}
 
 			}
@@ -737,7 +750,7 @@ class ArticlesApiController extends WikiaApiController {
 		//make the thumbnail's size parametrical without
 		//invalidating the titles details' cache
 		//or the need to duplicate it
-		$thumbnails = $this->getArticlesThumbnails( $articles, $width, $height );
+		$thumbnails = $this->getArticlesThumbnails( $resultingCollectionIds, $width, $height );
 
 		$articles = null;
 
@@ -837,7 +850,7 @@ class ArticlesApiController extends WikiaApiController {
 				/* @var VideoHandler $handler */
 				$handler = VideoHandler::getHandler( $file->getMimeType() );
 				$typeInfo = explode( '/', $file->getMimeType() );
-				$metadata = ( $handler ) ? $handler->getMetadata( true ) : null;
+				$metadata = ( $handler ) ? $handler->getVideoMetadata( true ) : null;
 				return [
 					'type' => static::VIDEO_TYPE,
 					'provider' => isset( $typeInfo[1] ) ? $typeInfo[1] : static::UNKNOWN_PROVIDER,
@@ -975,7 +988,12 @@ class ArticlesApiController extends WikiaApiController {
 			}
 
 			if ( $redirect !== 'no' && $article->getPage()->isRedirect() ) {
-				$article = Article::newFromTitle( $article->getPage()->followRedirect(), RequestContext::getMain() );
+				// false, Title object of local target or string with URL
+				$followRedirect = $article->getPage()->followRedirect();
+
+				if ( $followRedirect && !is_string( $followRedirect ) ) {
+					$article = Article::newFromTitle( $followRedirect, RequestContext::getMain() );
+				}
 			}
 
 			//Response is based on wikiamobile skin as this already removes inline style
@@ -1012,6 +1030,7 @@ class ArticlesApiController extends WikiaApiController {
 				'media' => $articleContent->media,
 				'users' => $articleContent->users,
 				'categories' => $categories,
+				'description' => $this->getArticleDescription( $article )
 			];
 
 			$this->setResponseData( $result, '', self::SIMPLE_JSON_VARNISH_CACHE_EXPIRATION );
@@ -1337,5 +1356,35 @@ class ArticlesApiController extends WikiaApiController {
 			$message = wfMessage( 'invalid-parameter-basearticleid', $baseArticleId )->text();
 			throw new BadRequestApiException( $message );
 		}
+	}
+
+	/**
+	 * Returns description for the article's meta tag.
+	 *
+	 * This is mostly copied from the ArticleMetaDescription extension.
+	 *
+	 * @param Article $article
+	 * @param int $descLength
+	 * @return string
+	 * @throws WikiaException
+	 */
+	protected function getArticleDescription( Article $article, $descLength = 100 ) {
+		$title = $article->getTitle();
+		$sMessage = null;
+
+		if ( $title->isMainPage() ) {
+			// we're on Main Page, check MediaWiki:Description message
+			$sMessage = wfMessage( 'Description' )->text();
+		}
+
+		if ( ( $sMessage == null ) || wfEmptyMsg( 'Description', $sMessage ) ) {
+			$articleService = new ArticleService( $article );
+			$description = $articleService->getTextSnippet( $descLength );
+		} else {
+			// MediaWiki:Description message found, use it
+			$description = $sMessage;
+		}
+
+		return $description;
 	}
 }

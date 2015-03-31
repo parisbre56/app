@@ -16,7 +16,7 @@ class ExactTargetUserTaskHelper {
 
 		$aApiParams = [
 			'DataExtension' => [
-				'ObjectType' => "DataExtensionObject[{$aCustomerKeys[ 'user' ]}]",
+				'ObjectType' => "DataExtensionObject[{$aCustomerKeys['user']}]",
 				'Properties' => $aProperties,
 			],
 			'SimpleFilterPart' => [
@@ -38,7 +38,7 @@ class ExactTargetUserTaskHelper {
 		$userId = $this->extractUserIdFromData( $aUserData );
 		/* Get Customer Keys specific for production or development */
 		$aCustomerKeys = $this->getCustomerKeys();
-		$sCustomerKey = $aCustomerKeys[ 'user' ];
+		$sCustomerKey = $aCustomerKeys['user'];
 
 		$aApiParams = [
 			'DataExtension' => [
@@ -60,7 +60,7 @@ class ExactTargetUserTaskHelper {
 	public function prepareUserDeleteParams( $iUserId ) {
 		/* Get Customer Keys specific for production or development */
 		$aCustomerKeys = $this->getCustomerKeys();
-		$sCustomerKey = $aCustomerKeys[ 'user' ];
+		$sCustomerKey = $aCustomerKeys['user'];
 
 		$aApiParams = [
 			'DataExtension' => [
@@ -86,7 +86,7 @@ class ExactTargetUserTaskHelper {
 		$aCustomerKeys = $this->getCustomerKeys();
 		$aApiParams = [ 'DataExtension' => [] ];
 		foreach ( $aGroup as $sGroup ) {
-			$aApiParams[ 'DataExtension' ][] = [
+			$aApiParams['DataExtension'][] = [
 				'CustomerKey' => $aCustomerKeys['user_groups'],
 				'Properties' => [
 					'ug_user' => $iUserId,
@@ -108,7 +108,7 @@ class ExactTargetUserTaskHelper {
 		$aCustomerKeys = $this->getCustomerKeys();
 		$aApiParams = [ 'DataExtension' => [] ];
 		foreach ( $aGroup as $sGroup ) {
-			$aApiParams[ 'DataExtension' ][] = [
+			$aApiParams['DataExtension'][] = [
 				'CustomerKey' => $aCustomerKeys['user_groups'],
 				'Keys' => [
 					'ug_user' => $iUserId,
@@ -156,6 +156,63 @@ class ExactTargetUserTaskHelper {
 	}
 
 	/**
+	 * Prepares array of params for ExactTarget API for retrieving UserID_WikiID DataExtension objects
+	 * @param array $aUsersIds Array consists of user ids in key. Value doesn't matter.
+	 * e.g. $aUsersIds = [ 321, 12345 ]
+	 * @return array
+	 */
+	public function prepareUserEditsRetrieveParams( array $aUsersIds ) {
+		/* Get Customer Keys specific for production or development */
+		$aCustomerKeys = $this->getCustomerKeys();
+		$sCustomerKey = $aCustomerKeys['UserID_WikiID'];
+		$aApiParams = [ 'DataExtension' => [] ];
+
+		$aApiParams['DataExtension'] = [
+			'ObjectType' => "DataExtensionObject[$sCustomerKey]",
+			'Properties' => [ 'user_id', 'wiki_id', 'contributions' ],
+		];
+
+		$sSimpleOperator = 'equals';
+		if ( count( $aUsersIds ) > 1 ) {
+			$sSimpleOperator = 'IN';
+		}
+
+		$aApiParams['SimpleFilterPart'] = [
+			'SimpleOperator' => $sSimpleOperator,
+			'Property' => 'user_id',
+			'Value' => $aUsersIds
+		];
+		return $aApiParams;
+	}
+
+	/**
+	 * Prepares array of params for ExactTarget API for updating DataExtension objects for UserID_WikiID mapping
+	 * @param int $iUserId User id
+	 * @param array $aUsersEdits array of user ids and number of contributions on wikis
+	 * e.g. $aUsersEdits = [ 12345 => [ 177 => 5 ] ]; It means user 12345 made 5 edits on 177 wiki
+	 * @return array
+	 */
+	public function prepareUserEditsUpdateParams( array $aUsersEdits ) {
+		/* Get Customer Keys specific for production or development */
+		$aCustomerKeys = $this->getCustomerKeys();
+		$sCustomerKey = $aCustomerKeys['UserID_WikiID'];
+		$aApiParams = [ 'DataExtension' => [] ];
+		foreach ( $aUsersEdits as $iUserId => $aWikiContributions ) {
+			foreach ( $aWikiContributions as $iWikiId => $iContributions ) {
+				$aApiParams['DataExtension'][] = [
+					'CustomerKey' => $sCustomerKey,
+					'Properties' => [ 'contributions' => $iContributions ],
+					'Keys' => [
+						'user_id' => $iUserId,
+						'wiki_id' => $iWikiId
+					]
+				];
+			}
+		}
+		return $aApiParams;
+	}
+
+	/**
 	 * Prepares array of params for ExactTarget API for creating DataExtension objects for user table
 	 * @param int $iUserId User id
 	 * @param array $aUserProperties user_properties key value array
@@ -164,11 +221,11 @@ class ExactTargetUserTaskHelper {
 	public function prepareUserPropertiesUpdateParams( $iUserId, array $aUserProperties ) {
 		/* Get Customer Keys specific for production or development */
 		$aCustomerKeys = $this->getCustomerKeys();
-		$sCustomerKey = $aCustomerKeys[ 'user_properties' ];
+		$sCustomerKey = $aCustomerKeys['user_properties'];
 
 		$aApiParams = [ 'DataExtension' => [] ];
 		foreach ( $aUserProperties as $sProperty => $sValue ) {
-			$aApiParams[ 'DataExtension' ][] = [
+			$aApiParams['DataExtension'][] = [
 				'CustomerKey' => $sCustomerKey,
 				'Properties' => [ 'up_value' => $sValue ],
 				'Keys' => [
@@ -201,7 +258,7 @@ class ExactTargetUserTaskHelper {
 
 		$aApiParams = [ 'DataExtension' => [] ];
 		foreach ( $aUserProperties as $sProperty ) {
-			$aApiParams[ 'DataExtension' ][] = [
+			$aApiParams['DataExtension'][] = [
 				'CustomerKey' => $sCustomerKey,
 				'Keys' => [
 					'up_user' => $iUserId,
@@ -218,9 +275,18 @@ class ExactTargetUserTaskHelper {
 	 * @return int
 	 */
 	public function extractUserIdFromData( &$aUserData ) {
-		$iUserId = $aUserData[ 'user_id' ];
-		unset( $aUserData[ 'user_id' ] );
+		$iUserId = $aUserData['user_id'];
+		unset( $aUserData['user_id'] );
 		return $iUserId;
+	}
+
+	/**
+	 * Returns User object for provided user ID
+	 * @param int $iUserId
+	 * @return \User
+	 */
+	public function getUserFromId( $iUserId ) {
+		return \User::newFromId( $iUserId );
 	}
 
 	/**
@@ -231,8 +297,27 @@ class ExactTargetUserTaskHelper {
 		$aCustomerKeys = [
 			'user' => 'user',
 			'user_properties' => 'user_properties',
-			'user_groups' => 'user_groups'
+			'user_groups' => 'user_groups',
+			'UserID_WikiID' => 'UserID_WikiID'
 		];
 		return $aCustomerKeys;
 	}
+
+	/**
+	 * Foreach record retrieved from ExactTarget add number of contributions to UsersEditsData for update
+	 * requires parameters to have following structure
+	 * [ 1234 => [ 177 => 5500 ] ] That means user with id 1234 made 5500 edits on wiki with 177 id
+	 * @param array $aUsersEditsData
+	 * @param array $aUserEditsDataFromET
+	 */
+	public function mergeUsersEditsData( array &$aUsersEditsData, array $aUserEditsDataFromET ) {
+		foreach ( $aUserEditsDataFromET as $iUserId => $aWikiContributions ) {
+			foreach ( $aWikiContributions as $iWikiId => $iContributions ) {
+				if ( isset( $aUsersEditsData[$iUserId][$iWikiId] ) ) {
+					$aUsersEditsData[$iUserId][$iWikiId] += $iContributions;
+				}
+			}
+		}
+	}
+
 }

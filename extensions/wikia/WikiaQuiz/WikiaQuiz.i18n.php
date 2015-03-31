@@ -501,7 +501,7 @@ $messages['diq'] = array(
 	'wikiaquiz-moreinfoarticle-label' => 'Wesiqe',
 	'wikiaquiz-moreinfolinktext-label' => 'Metnê Gri',
 	'wikiaquiz-question-label' => 'Pers',
-	'wikiaquiz-image-label' => 'Resim (opsiyonel)',
+	'wikiaquiz-image-label' => 'Resım (opsiyonel)',
 	'wikiaquiz-quiz-label' => 'Quiz',
 	'wikiaquiz-questions-label' => 'Persi',
 	'wikiaquiz-answers-label' => 'Cıwab',
@@ -587,6 +587,22 @@ $messages['es'] = array(
 	'wikiaquiz-game-email-error' => 'Hubo un error al enviar este correo electrónico: $1',
 	'wikiaquiz-game-challenge' => '¡Desafía a tus amigos a jugar!',
 	'wikiaquiz-game-mute' => 'Mudo',
+);
+
+/** Basque (euskara)
+ * @author Subi
+ */
+$messages['eu'] = array(
+	'wikiaquiz-questions-label' => 'Galderak',
+	'wikiaquiz-answers-label' => 'Erantzunak',
+	'wikiaquiz-answer-label' => 'Erantzuna',
+	'wikiaquiz-game-cadence-3' => 'Adi',
+	'wikiaquiz-game-cadence-2' => 'Prest',
+	'wikiaquiz-game-cadence-1' => 'Ja!',
+	'wikiaquiz-game-question-label' => 'GALDERA',
+	'wikiaquiz-game-next-button' => 'Hurrengo galdera',
+	'wikiaquiz-game-finish-button' => 'Amaitu',
+	'wikiaquiz-game-continue-button' => 'Jarraitu',
 );
 
 /** Persian (فارسی)
@@ -690,6 +706,13 @@ $messages['fr'] = array(
 	'wikiaquiz-game-email-error' => 'Une erreur est survenue à l’envoi de ce courriel : $1',
 	'wikiaquiz-game-challenge' => 'Défiez vos amis d’y participer !',
 	'wikiaquiz-game-mute' => 'Muet',
+);
+
+/** Western Frisian (Frysk)
+ * @author Robin0van0der0vliet
+ */
+$messages['fy'] = array(
+	'wikiaquiz-cancel-label' => 'Annulearje',
 );
 
 /** Galician (galego)
@@ -1064,6 +1087,7 @@ $messages['ko'] = array(
 	'wikiaquiz-moreinfolinktext-label' => '링크 텍스트',
 	'wikiaquiz-question-label' => '질문',
 	'wikiaquiz-image-label' => '그림 (선택 사항)',
+	'wikiaquiz-video-label' => '동영상 (선택 사항. 그림 대용)',
 	'wikiaquiz-explanation-label' => '정답 설명 (선택 사항)',
 	'wikiaquiz-quiz-label' => '퀴즈',
 	'wikiaquiz-questions-label' => '질문',

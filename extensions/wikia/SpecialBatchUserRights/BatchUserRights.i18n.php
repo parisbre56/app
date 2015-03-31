@@ -105,6 +105,7 @@ $messages['bs'] = array(
 
 /** Catalan (català)
  * @author Marcmpujol
+ * @author Unapersona
  */
 $messages['ca'] = array(
 	'batchuserrights' => "Drets d'usuaris per lots",
@@ -116,9 +117,9 @@ Si us plau, pregunta a un administrador del sistema si necessites afegir altres 
 	'batchuserrights-single-progress-update' => 'Afegit {{PLURAL:$1|grup|grups}} a <strong>$2</strong>.',
 	'batchuserrights-add-groups' => 'Afegint {{PLURAL:$1|un usuari|$1 usuaris}} {{PLURAL:$2|al següent grup|als següents grups}}: <strong>$3</strong>.',
 	'batchuserrights-userload-error' => "No s'ha pogut carregar l'usuari \"'''\$1'''\".",
-	'batchuserrights-no-groups' => "No has triar cap grup.
+	'batchuserrights-no-groups' => "No has triat cap grup.
 D'aquesta manera no passarà res.
-La resta de la pàgina serà executada sol per a que puguis veure fàcilment si algun nom d'usuari no es pot carregar.",
+La resta de la pàgina estarà disponible per poder veure si hi han altres noms d'usuaris que no ha pogut ser carregats.",
 );
 
 /** Czech (čeština)
@@ -353,7 +354,10 @@ $messages['ja'] = array(
  * @author Miri-Nae
  */
 $messages['ko'] = array(
+	'batchuserrights' => '일괄 사용자 권한',
 	'batchuserrights-names' => '이 그룹에 추가할 사용자 이름 (줄마다 하나):',
+	'batchuserrights-single-progress-update' => '<strong>$2</strong> 사용자에게 {{PLURAL:$1|그룹|그룹들}}을 추가했습니다.',
+	'batchuserrights-add-groups' => '{{PLURAL:$1|사용자 한 명|사용자 $1명}}을 다음 그룹에 추가했습니다: <strong>$3</strong>', # Fuzzy
 	'batchuserrights-userload-error' => "\"'''\$1'''\" 사용자를 불러올 수 없습니다.",
 	'batchuserrights-no-groups' => '그룹을 선택하지 않았습니다.
 아무것도 수행하지 않습니다.

@@ -3,6 +3,7 @@
 class ExternalUser_Wikia extends ExternalUser {
 	static private $recentlyUpdated = array();
 	private $mRow, $mDb, $mUser;
+	private $lastAuthenticationError;
 
 	protected function initFromName( $name ) {
 		wfDebug( __METHOD__ . ": init User from name: $name \n" );
@@ -198,14 +199,25 @@ class ExternalUser_Wikia extends ExternalUser {
 		return $this->mRow->user_birthdate;
 	}
 
+	public function getLastAuthenticationError() {
+		return $this->lastAuthenticationError;
+	}
+
 	public function authenticate( $password ) {
-		/** PLATFORM-508 - logging for Helios project - begin */
-		\Wikia\Logger\WikiaLogger::instance()->debug( 'PLATFORM-508', [ 'method' => __METHOD__ ] );
-		/** PLATFORM-508 - logging for Helios project - end */
-		# This might be wrong if anyone actually uses the UserComparePasswords hook
-		# (on either end), so don't use this if you those are incompatible.
-		wfDebug( __METHOD__ . ": " . $this->getId() . " \n" );
-		return User::comparePasswords( $this->getPassword(), $password, $this->getId() );
+		$this->lastAuthenticationError = null;
+
+		$result = null;
+		$errorMessageKey = null;
+
+		wfRunHooks( 'UserCheckPassword', [ $this->getId(), $this->getName(), $this->getPassword(), $password, &$result, &$errorMessageKey ] );
+		if ( $result === null ) {
+			$result = User::comparePasswords( $this->getPassword(), $password, $this->getId() );
+		}
+		if ( $errorMessageKey ) {
+			$this->lastAuthenticationError = $errorMessageKey;
+		}
+
+		return $result;
 	}
 
 	public function getPref( $pref ) {

@@ -895,16 +895,16 @@ $messages['diq'] = array(
 	'myhome-feed-added-by' => 'terefê $1 ra bi cı',
 	'myhome-feed-edited-by' => 'terefê $1 ra vuriya',
 	'myhome-feed-posted-by' => 'terefê $1 ra rışiya',
-	'myhome-feed-comment-by' => 'terefê $1 ra xulasa',
+	'myhome-feed-comment-by' => 'terefê $1 ra mışewre',
 	'myhome-feed-deleted-by' => 'terefê $1 ra esteriya',
 	'myhome-feed-moved-by' => 'terefê $1 ra berd',
-	'myhome-feed-article-comment-created-by' => 'terefê $1 ra vatışo newe',
+	'myhome-feed-article-comment-created-by' => 'terefê $1 ra mışewreyo newe',
 	'myhome-feed-article-comment-edited-by' => 'terefê $1 ra xulasa vurnê',
 	'myhome-feed-by' => 'terefê $1 ra',
 	'myhome-feed-new-page-details' => 'Pela newiye',
 	'myhome-feed-summary-details' => 'Xulasa',
-	'myhome-feed-new-blog-comment-details' => 'Vatış',
-	'myhome-feed-new-article-comment-details' => 'Vacayış',
+	'myhome-feed-new-blog-comment-details' => 'Mışewre',
+	'myhome-feed-new-article-comment-details' => 'Mışewre',
 	'myhome-feed-inserted-image-details' => '{{PLURAL:$1|Resime ke debyay|Resime ke debyay}}',
 	'myhome-feed-inserted-video-details' => '{{PLURAL:$1|Videoye ke debyay|Videoye ke debyay}}',
 	'myhome-feed-inserted-category-details' => '{{PLURAL:$1|Kategoriye ke debyay|Kategoriye ke debyay}}',
@@ -1478,6 +1478,13 @@ Si vous êtes le fondateur ou bien un administrateur de ce wiki, vous pouvez cha
 	'tooltip-pt-myhome' => 'Aller à Mon Accueil',
 	'activityfeed' => 'Flux d’activité',
 	'wiki-activity-message-wall-messages-count' => '{{PLURAL:$1|un message|$1 messages}}',
+);
+
+/** Western Frisian (Frysk)
+ * @author Robin0van0der0vliet
+ */
+$messages['fy'] = array(
+	'myhome-feed-edit' => 'bewurkje',
 );
 
 /** Galician (galego)
@@ -2128,14 +2135,49 @@ $messages['kn'] = array(
  * @author Miri-Nae
  */
 $messages['ko'] = array(
+	'myhome' => '마이 홈',
 	'wikiactivity' => '위키 활동 내역',
 	'myhome-activity-more' => '더 많은 활동 내역 보기',
+	'myhome-watchlist-feed' => '주시문서 목록',
+	'myhome-hot-spots-feed' => '핫 스팟',
+	'tog-userlandingpage' => '위키 방문시 처음 보이는 곳:',
+	'prefs-myhome' => '마이 홈',
 	'myhome-feed-newpage' => '새 문서',
 	'myhome-feed-edit' => '편집',
+	'myhome-feed-move' => '문서 이동',
+	'myhome-feed-talkpage' => '토론 문서',
+	'myhome-feed-blogcomment' => '블로그 댓글',
+	'myhome-feed-delete' => '삭제',
+	'myhome-feed-image' => '그림 추가',
+	'myhome-feed-video' => '동영상 추가',
+	'myhome-feed-categorization' => '분류 추가',
+	'myhome-feed-created-by' => '$1의 생성',
+	'myhome-feed-added-by' => '$1의 추가',
+	'myhome-feed-edited-by' => '$1의 편집',
+	'myhome-feed-posted-by' => '$1의 게시',
+	'myhome-feed-comment-by' => '$1의 댓글',
+	'myhome-feed-deleted-by' => '$1의 삭제',
+	'myhome-feed-moved-by' => '$1의 이동',
+	'myhome-feed-article-comment-created-by' => '$1의 새 댓글',
+	'myhome-feed-article-comment-edited-by' => '$1의 댓글 편집',
+	'myhome-feed-by' => '($1)',
 	'myhome-feed-new-page-details' => '새 문서',
+	'myhome-feed-summary-details' => '요약',
+	'myhome-feed-section-edit-details' => '이 문단 편집',
+	'myhome-feed-new-blog-post-details' => '새 블로그',
+	'myhome-feed-new-blog-comment-details' => '댓글',
+	'myhome-feed-new-article-comment-details' => '댓글',
+	'myhome-feed-move-details' => '이름 변경',
 	'myhome-feed-redirect-details' => '넘겨주기',
+	'myhome-feed-inserted-image-details' => '그림 추가', # Fuzzy
+	'myhome-feed-inserted-video-details' => '동영상 추가', # Fuzzy
+	'myhome-feed-inserted-category-details' => '분류 추가', # Fuzzy
 	'myhome-hot-spots-number-of-editors' => '편집자',
+	'myhome-log-in' => "<center>마이 홈 기능은 로그인한 상태에서만 이용하실 수 있습니다.<br /><br /><big>'''[{{fullurl:Special:Signup|$1}} 먼저 로그인해 주세요!]'''</big></center>",
+	'myhome-switch-to-monaco' => "위키 활동 내역 기능은 위키아 스킨을 사용 중일 때만 사용할 수 있습니다.
+마이 홈을 보고 싶으실 땐 '''[[Special:Preferences|환경설정]]'''에서 스킨을 변경해 주세요.",
 	'myhome-namespace-blog' => '블로그',
+	'myhome-community-corner-header' => '커뮤니티 코너',
 );
 
 /** Colognian (Ripoarisch)
@@ -3079,15 +3121,16 @@ Podes, por exemplo:
  * @author Caio1478
  * @author Giro720
  * @author JM Pessanha
+ * @author Jefersonmoraes
  * @author Jesielt
  */
 $messages['pt-br'] = array(
 	'myhome-desc' => 'Uma página privada para usuários autenticados',
 	'myhome' => 'Minha página inicial',
 	'wikiactivity' => 'Atividade na Wiki',
-	'myhome-activity-more' => 'ver mais atividades recentes',
+	'myhome-activity-more' => 'ver mais atividade recente',
 	'myhome-activity-feed' => 'Atividade recente',
-	'myhome-activity-feed-empty' => "Esta wiki está esperando a sua participação. Clique em '''[[Special:CreatePage|nova página]]''' para começar a escrever.",
+	'myhome-activity-feed-empty' => "Esta wikia está esperando a sua participação. Clique em '''[[Special:CreatePage|nova página]]''' para começar a escrever.",
 	'myhome-watchlist-feed' => 'Lista de vigiados',
 	'myhome-watchlist-feed-empty' => 'Você pode adicionar páginas à sua lista de páginas vigiadas clicando o link "{{int:watch}}" na barra do topo da página.
 Use a lista de páginas vigiadas para monitorar alterações das páginas pelas quais você se interessa.',
@@ -4094,6 +4137,7 @@ $messages['zh'] = array(
  * @author Hydra
  * @author Hzy980512
  * @author Liangent
+ * @author Liuxinyu970226
  * @author Yanmiao liu
  * @author Yfdyh000
  */
@@ -4106,7 +4150,7 @@ $messages['zh-hans'] = array(
 	'myhome-activity-feed-empty' => "维基在等待您的参与。
 点击'''[[Special:CreatePage|新页面]]'''开始撰写！",
 	'myhome-watchlist-feed' => '监视列表',
-	'myhome-watchlist-feed-empty' => '您可以通过点击页面顶部条中的"{{int:watch}}"链接向监视列表中添加页面。
+	'myhome-watchlist-feed-empty' => '您可以通过点击页面顶部条中的“{{int:watch}}”链接向监视列表中添加页面。
 您可以使用您的监视列表保持跟踪您关心的网页的最新变化。',
 	'myhome-user-contributions-feed' => '贡献',
 	'myhome-hot-spots-feed' => '热点',
@@ -4145,7 +4189,7 @@ $messages['zh-hans'] = array(
 	'myhome-feed-redirect-details' => '重定向',
 	'myhome-feed-inserted-image-details' => '{{PLURAL:$1|添加的照片|添加的照片}}',
 	'myhome-feed-inserted-video-details' => '{{PLURAL:$1|添加的视频|添加的视频}}',
-	'myhome-feed-inserted-category-details' => '{{PLURAL:$1|添加的类别|添加的类别}}',
+	'myhome-feed-inserted-category-details' => '{{PLURAL:$1|已添加的分类}}',
 	'myhome-user-contributions-empty' => '您可以通过点击任何页面上的"{{int:editthispage}}"来参与本维基，并添加您所知道的。
 每个人都可以进行更改，添加信息或纠正错误。
 维基是由社团建立的，一旦您点击“编辑”按钮，您也是社团的一部分。

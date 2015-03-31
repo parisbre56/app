@@ -49,13 +49,14 @@ define('ext.wikia.adEngine.adConfigLate', [
 		dartDirectBtfSlots = {
 			'LEFT_SKYSCRAPER_3': true,
 			'PREFOOTER_LEFT_BOXAD': true,
-			'PREFOOTER_RIGHT_BOXAD': true,
-			'TOP_INCONTENT_BOXAD': true
+			'PREFOOTER_RIGHT_BOXAD': true
 		},
 		alwaysCallDart = context.opts.alwaysCallDart && !instantGlobals.wgSitewideDisableGpt,
 		decorators = adDecoratorTopInContent ? [adDecoratorTopInContent] : [];
 
 	function getProviderList(slotname) {
+		var evolveProvidersForSlot;
+
 		log('getProvider', 5, logGroup);
 		log(slotname, 5, logGroup);
 
@@ -86,12 +87,19 @@ define('ext.wikia.adEngine.adConfigLate', [
 
 		if (country === 'AU' || country === 'CA' || country === 'NZ') {
 			log(['getProvider', slotname, 'Evolve'], 'info', logGroup);
-			return [adProviderEvolve, adProviderLiftium];
-		}
+			evolveProvidersForSlot = [adProviderRemnantGpt, adProviderLiftium];
 
-		// Don't load ads in TOP_INCONTENT_BOXAD if adDecoratorTopInContent is not available
-		if (slotname === 'TOP_INCONTENT_BOXAD' && !adDecoratorTopInContent) {
-			return [];
+			if (adProviderEvolve.canHandleSlot(slotname)) {
+				evolveProvidersForSlot.unshift(adProviderEvolve);
+				return evolveProvidersForSlot;
+			}
+
+			if (dartDirectBtfSlots[slotname]) {
+				evolveProvidersForSlot.unshift(adProviderDirectGpt);
+				return evolveProvidersForSlot;
+			}
+
+			return evolveProvidersForSlot;
 		}
 
 		if (alwaysCallDart) {
@@ -102,11 +110,7 @@ define('ext.wikia.adEngine.adConfigLate', [
 		}
 
 		// Load GPT and Liftium ads in TOP_INCONTENT_BOXAD
-		if (slotname === 'TOP_INCONTENT_BOXAD') {
-			return [adProviderDirectGpt, adProviderLiftium];
-		}
-
-		if (context.targeting.skin === 'venus' && slotname === 'INCONTENT_BOXAD_1') {
+		if (context.targeting.skin === 'venus' && slotname.indexOf('INCONTENT') !== -1) {
 			return [];
 		}
 

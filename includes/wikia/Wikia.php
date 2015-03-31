@@ -21,7 +21,6 @@ $wgHooks['SetupAfterCache']          [] = "Wikia::setupAfterCache";
 $wgHooks['ComposeMail']              [] = "Wikia::ComposeMail";
 $wgHooks['SoftwareInfo']             [] = "Wikia::softwareInfo";
 $wgHooks['AddNewAccount']            [] = "Wikia::ignoreUser";
-$wgHooks['WikiFactory::execute']     [] = "Wikia::switchDBToLightMode";
 $wgHooks['ComposeMail']              [] = "Wikia::isUnsubscribed";
 $wgHooks['AllowNotifyOnPageChange']  [] = "Wikia::allowNotifyOnPageChange";
 $wgHooks['AfterInitialize']          [] = "Wikia::onAfterInitialize";
@@ -402,10 +401,12 @@ class Wikia {
 	 * @author Krzysztof Krzyżaniak <eloy@wikia-inc.com>
 	 *
 	 * @param String $method     -- use __METHOD__
-	 * @param String $sub        -- sub-section name (if more than one in same method); default false
+	 * @param String|bool $sub   -- sub-section name (if more than one in same method); default false
 	 * @param String $message    -- additional message; default false
 	 * @param Boolean $always    -- skip checking of $wgErrorLog and write log (or not); default false
 	 * @param Boolean $timestamp -- write timestamp before line; default false
+	 *
+	 * @deprecated use WikiaLogger instead
 	 *
 	 */
 	static public function log( $method, $sub = false, $message = '', $always = false, $timestamp = false ) {
@@ -444,6 +445,8 @@ class Wikia {
 	 * @author Maciej Brencz <macbre@wikia-inc.com>
 	 *
 	 * @param String $method - use __METHOD__
+	 *
+	 * @deprecated use WikiaLogger instead
 	 */
 	static public function logBacktrace($method) {
 		$backtrace = trim(strip_tags(wfBacktrace()));
@@ -464,6 +467,8 @@ class Wikia {
 	 * @author Piotr Molski <moli@wikia-inc.com>
 	 *
 	 * @param String $method - use __METHOD__ as default
+	 *
+	 * @deprecated use WikiaLogger instead
 	 */
 	static public function debugBacktrace($method) {
 		$backtrace = wfDebugBacktrace();
@@ -1279,25 +1284,6 @@ class Wikia {
 
 		wfProfileOut( __METHOD__ );
 		return $params;
-	}
-
-
-	/**
-	 * Sleep until wgDBLightMode is enable. This variable is used to disable (sleep) all
-	 * maintanance scripts while something is wrong with performance
-	 *
-	 * @static
-	 * @author Piotr Molski (moli) <moli at wikia-inc.com>
-	 * @param int $maxSleep
-	 * @return null
-	 */
-	static function switchDBToLightMode( $WFLoader ) {
-		// commandline scripts only
-		if ( $WFLoader->mCommandLine ) {
-			// switch db to light mode
-			wfDBLightMode(60);
-		}
-		return true;
 	}
 
 	static public function getAllHeaders() {

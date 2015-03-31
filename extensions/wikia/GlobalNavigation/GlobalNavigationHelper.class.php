@@ -27,15 +27,18 @@ class GlobalNavigationHelper {
 	 */
 	public function getCentralUrlForLang( $lang ) {
 		global $wgLangToCentralMap;
+		$out = '/';
+
 		$title = $this->getCentralWikiUrlForLangIfExists( $lang );
 		if ( $title ) {
-			return $title->getServer();
+			$out = $title->getServer();
 		} else if ( !empty( $wgLangToCentralMap[ $lang ] ) ) {
-			return $wgLangToCentralMap[ $lang ];
-		} else {
-			$var = $this->getCentralWikiUrlForLangIfExists( self::DEFAULT_LANG );
-			return $var->getServer();
+			$out = $wgLangToCentralMap[ $lang ];
+		} else if ($title = $this->getCentralWikiUrlForLangIfExists( self::DEFAULT_LANG ) ) {
+			$out = $title->getServer();
 		}
+
+		return $out;
 	}
 
 	/**
@@ -46,12 +49,16 @@ class GlobalNavigationHelper {
 	 * @return string - central wiki url
 	 */
 	public function getCentralUrlFromGlobalTitle( $lang ) {
+		$out = '/';
+
 		$title = $this->getCentralWikiUrlForLangIfExists($lang);
 		if ($title) {
-			return $title->getServer();
-		} else {
-			return $this->getCentralWikiUrlForLangIfExists(self::DEFAULT_LANG)->getServer();
+			$out = $title->getServer();
+		} else if ( $title = $this->getCentralWikiUrlForLangIfExists( self::DEFAULT_LANG ) ) {
+			$out = $title->getServer();
 		}
+
+		return $out;
 	}
 
 	/**
@@ -80,6 +87,23 @@ class GlobalNavigationHelper {
 	 */
 	public function getGlobalSearchUrl( $centralUrl ) {
 		return $centralUrl . self::CENTRAL_WIKI_SEARCH;
+	}
+
+	/**
+	 * @desc get language for search results.
+	 * If resultsLang param is set then use it if not get it from $wgLang
+	 *
+	 * @return String - language
+	 */
+	public function getLangForSearchResults() {
+		global $wgLanguageCode, $wgRequest;
+
+		$resultsLang = $wgRequest->getVal('resultsLang');
+		if (!empty($resultsLang)) {
+			return $resultsLang;
+		} else {
+			return $wgLanguageCode;
+		}
 	}
 
 	/**

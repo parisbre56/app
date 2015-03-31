@@ -3,6 +3,7 @@
 $messages = array();
 
 $messages['en'] = array(
+	'editpagelayout-desc' => 'Applies updated layout for edit pages',
 	'editpagelayout-more' => 'more',
 	'editpagelayout-less' => 'less',
 	'editpagelayout-helpLink-url' => 'Help:Editing',
@@ -22,7 +23,7 @@ $messages['en'] = array(
 	'editpagelayout-pageControls-back' => 'Back to editor',
 	'editpagelayout-pageControls-changes' => 'Changes',
 	'editpagelayout-blocked-user' => 'Your user name or IP address has been blocked',
-	'editpagelayout-edit-summary-label' => 'Edit Summary',
+	'editpagelayout-edit-summary-label' => 'Edit summary',
 	'editpagelayout-subject-headline-label' => 'Subject/headline:',
 
 	'wikia-editor-media-image' => 'Photo',
@@ -97,6 +98,16 @@ $messages['en'] = array(
 	'tog-editwidth' => 'Widen the Source mode edit box to fill the entire screen',
 	'tog-minordefault' => 'Mark all edits as "minor" by default',
 	'tog-forceeditsummary' => 'Prompt me if I leave a blank edit summary',
+	'tog-disablesyntaxhighlighting' => 'Do not show syntax highlighting in Source mode',
+
+	// preview-related messages
+	'editpagelayout-preview-label-desktop' => 'Desktop',
+	'editpagelayout-preview-label-mobile' => 'Mobile',
+
+	'editpagelayout-preview-dropdown-item-mobile' => 'Mobile',
+	'editpagelayout-preview-dropdown-item-tablet' => 'Tablet Portrait',
+	'editpagelayout-preview-dropdown-item-desktop' => 'Desktop',
+	'editpagelayout-preview-dropdown-item-desktopxl' => 'Desktop XL'
 );
 
 /** Message documentation (Message documentation)
@@ -107,6 +118,7 @@ $messages['en'] = array(
  * @author TK-999
  */
 $messages['qqq'] = array(
+	'editpagelayout-desc' => '{{desc}}',
 	'editpagelayout-more' => '{{Identical|More}}',
 	'editpagelayout-helpLink-url' => 'See interwiki links (below categories) on http://help.wikia.com/wiki/Help:Editing for eventually an appropiate page name. {{doc-important|Do not change the "<tt>Help:</tt>" part.}}',
 	'editpagelayout-notificationsLink-none' => '{{Identical|Notification}}',
@@ -142,6 +154,20 @@ $messages['qqq'] = array(
 	'prefs-starting-an-edit' => 'This is a heading in Special:Preferences',
 	'prefs-editing-experience' => 'This is a heading in Special:Preferences',
 	'wikia-editor-preview-editSummary' => 'A text showed on the bottom of preview window when the edit summary was added, the parameter is the added summary',
+
+	'tog-editsection' => 'A label for checkbox to enable showing section edit links',
+	'tog-editwidth' => 'A label for checkbox to widen the Source mode edit box to fill the entire screen',
+	'tog-minordefault' => 'A label for checkbox to mark all edits as "minor" by default',
+	'tog-forceeditsummary' => 'A label for checkbox to prompt user if leave a blank edit summary',
+	'tog-disablesyntaxhighlighting' => 'A label for checkbox to dont show syntax highlighting in source mode',
+
+	'editpagelayout-preview-label-desktop' => 'A label shown under the desktop icon in the preview section of the edit interface, clicking changes the type of preview (toggle between mobile and desktop). Also displayed as a popup when the user hovers the desktop icon',
+	'editpagelayout-preview-label-mobile' => 'A label shown under the mobile icon in the preview section of the edit interface, clicking changes the type of preview (toggle between mobile and desktop). Also displayed as a popup when the user hovers over the mobile icon',
+
+	'editpagelayout-preview-dropdown-item-mobile' => 'An item in a dropdown menu near the top of the preview modal dialog, allows the user to select the type of preview they want to see',
+	'editpagelayout-preview-dropdown-item-tablet' => 'An item in a dropdown menu near the top of the preview modal dialog, allows the user to select the type of preview they want to see',
+	'editpagelayout-preview-dropdown-item-desktop' => 'An item in a dropdown menu near the top of the preview modal dialog, allows the user to select the type of preview they want to see',
+	'editpagelayout-preview-dropdown-item-desktopxl' => 'An item in a dropdown menu near the top of the preview modal dialog, allows the user to select the type of preview they want to see'
 );
 
 /** Azerbaijani (azərbaycanca)

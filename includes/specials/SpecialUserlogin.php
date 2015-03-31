@@ -49,7 +49,8 @@ class LoginForm extends SpecialPage {
 	var $mType, $mReason, $mName, $mRealName;
 	var $mAbortLoginErrorMsg = 'login-abort-generic';
 	private $mLoaded = false;
-	var $mMarketingOptIn, $wpBirthYear, $wpBirthMonth, $wpBirthDay, $wpMsgPrefix;
+	var $mMarketingOptIn, $mRegistrationCountry;
+	var $wpBirthYear, $wpBirthMonth, $wpBirthDay, $wpMsgPrefix;
 	var $wpUserLoginExt, $wpUserBirthDay;
 
 	/**
@@ -91,6 +92,21 @@ class LoginForm extends SpecialPage {
 		$this->mType = $request->getText( 'type' );
 		$this->mUsername = $request->getText( 'wpName' );
 		$this->mPassword = $request->getText( 'wpPassword' );
+
+		global $wgEnableHeliosExt;
+		if ( $wgEnableHeliosExt ) {
+			// The line below duplicates what WebRequest::__construct() does. The reason for that
+			// is that raw and unprocessed data are required here for debugging purposes. This will
+			// provided the information whether the original user input is somehow malformed
+			// before it is passed to hashing methods.
+			$aData = $_POST + $_GET;
+			if ( isset( $aData['wpPassword'] ) ) {
+				\Wikia\Helios\User::debugLogin( $aData['wpPassword'], __METHOD__ . '-raw' );
+			}
+			unset( $aData );
+			\Wikia\Helios\User::debugLogin( $this->mPassword, __METHOD__ . '-getText' );
+		}
+
 		$this->mRetype = $request->getText( 'wpRetype' );
 		$this->mDomain = $request->getText( 'wpDomain' );
 		$this->mReason = $request->getText( 'wpReason' );
@@ -108,6 +124,7 @@ class LoginForm extends SpecialPage {
 		$this->mRemember = $request->getCheck( 'wpRemember' );
 		$this->mStickHTTPS = $request->getCheck( 'wpStickHTTPS' );
 		$this->mMarketingOptIn = $request->getCheck( 'wpMarketingOptIn' );
+		$this->mRegistrationCountry = $request->getVal( 'wpRegistrationCountry' );
 		$this->mLanguage = $request->getText( 'uselang' );
 		$this->mSkipCookieCheck = $request->getCheck( 'wpSkipCookieCheck' );
 		$this->mToken = ( $this->mType == 'signup' ) ? $request->getVal( 'wpCreateaccountToken' ) : $request->getVal( 'wpLoginToken' );
@@ -569,7 +586,8 @@ class LoginForm extends SpecialPage {
 
 		$u->setOption( 'rememberpassword', $this->mRemember ? 1 : 0 );
 		$u->setOption( 'marketingallowed', $this->mMarketingOptIn ? 1 : 0 );
-		$u->setOption('skinoverwrite', 1);
+		$u->setOption( 'registrationCountry', $this->mRegistrationCountry );
+		$u->setOption( 'skinoverwrite', 1 );
 		$u->saveSettings();
 
 		# Update user count
@@ -646,6 +664,11 @@ class LoginForm extends SpecialPage {
 
 		$this->mExtUser = ExternalUser_Wikia::newFromName( $this->mUsername );
 
+		global $wgEnableHeliosExt;
+		if ( $wgEnableHeliosExt ) {
+			\Wikia\Helios\User::debugLogin( $this->mPassword, __METHOD__ );
+		}
+
 		global $wgExternalAuthType;
 		if ( $wgExternalAuthType
 		&& is_object( $this->mExtUser )
@@ -654,6 +677,16 @@ class LoginForm extends SpecialPage {
 			# password, so we assume they're the same.
 			$this->mExtUser->linkToLocal( $this->mExtUser->getId() );
 		}
+
+		// Wikia change - begin - author: @wladek
+		if ( $wgExternalAuthType
+			&& is_object( $this->mExtUser )
+			&& $this->mExtUser->getLastAuthenticationError() )
+		{
+			$this->mAbortLoginErrorMsg = $this->mExtUser->getLastAuthenticationError();
+			return self::ABORTED;
+		}
+		// Wikia change - end
 
 		# TODO: Allow some magic here for invalid external names, e.g., let the
 		# user choose a different wiki name.
@@ -679,7 +712,12 @@ class LoginForm extends SpecialPage {
 		}
 
 		global $wgBlockDisablesLogin;
-		if ( !$u->checkPassword( $this->mPassword ) ) {
+		$abortedMessageKey = null;
+		if ( !$u->checkPassword( $this->mPassword, $abortedMessageKey ) ) {
+			if ( $abortedMessageKey ) {
+				$this->mAbortLoginErrorMsg = $abortedMessageKey;
+				return self::ABORTED;
+			}
 			if( $u->checkTemporaryPassword( $this->mPassword ) ) {
 				// The e-mailed temporary password should not be used for actu-
 				// al logins; that's a very sloppy habit, and insecure if an
@@ -1057,9 +1095,9 @@ class LoginForm extends SpecialPage {
 		}
 		/* Wikia change begin - @author: Marooned */
 		/* HTML e-mails functionality */
+		$userLanguage = $u->getOption( 'language' );
 		$priority = 2;  // Password emails are higher than default priority of 0 and confirmation emails priority of 1
 		if (empty($wgEnableRichEmails)) {
-			$userLanguage = $u->getOption( 'language' );
 			$m = $this->msg( $emailText, $ip, $u->getName(), $np, $wgServer . $wgScript,
 				round( $wgNewPasswordExpiry / 86400 ) )->inLanguage( $userLanguage )->text();
 			$result = $u->sendMail( $this->msg( $emailTitle )->inLanguage( $userLanguage )->text(), $m, null, $nr, 'TemporaryPassword', $priority );
@@ -1073,7 +1111,8 @@ class LoginForm extends SpecialPage {
 				);
 				$mHTML = strtr($emailTextTemplate, $emailParams);
 			}
-			$result = $u->sendMail( $this->msg( $emailTitle )->text(), $m, null, $nr, 'TemporaryPassword', $mHTML, $priority );
+			$result = $u->sendMail( $this->msg( $emailTitle )->inLanguage( $userLanguage )->text(), $m, null,
+				$nr, 'TemporaryPassword', $mHTML, $priority );
 		}
 
 		return $result;

@@ -3,13 +3,18 @@
  * The AMD module to hold all the context needed for the client-side scripts to run.
  */
 define('ext.wikia.adEngine.adContext', [
-	'wikia.window', 'wikia.document', 'wikia.geo', require.optional('wikia.instantGlobals'),  require.optional('wikia.abTest')
+	'wikia.window',
+	'wikia.document',
+	'wikia.geo',
+	'wikia.instantGlobals',
+	require.optional('wikia.abTest')
 ], function (w, doc, geo, instantGlobals, abTest) {
 	'use strict';
 
 	instantGlobals = instantGlobals || {};
 
-	var context;
+	var context,
+		callbacks = [];
 
 	function getContext() {
 		return context;
@@ -28,6 +33,10 @@ define('ext.wikia.adEngine.adContext', [
 	}
 
 	function setContext(newContext) {
+		var i,
+			len;
+
+		// Note: consider copying the value, not the reference
 		context = newContext;
 
 		// Always have objects in all categories
@@ -42,17 +51,24 @@ define('ext.wikia.adEngine.adContext', [
 		}
 
 		// Use PostScribe for ScriptWriter implementation when SevenOne Media ads are enabled
-		context.opts.usePostScribe = context.opts.usePostScribe || context.providers.sevenOneMedia;
+		if (context.providers.sevenOneMedia) {
+			context.opts.usePostScribe = true;
+		}
+
+		// Always call DART
+		// TODO: make mobile code compatible with desktop (currently one uses opts and the other providers)
+		// TODO: clean up in ADEN-1785
+		context.opts.alwaysCallDart = true;
+		context.providers.remnantGptMobile = true;
 
 		// Targeting by page categories
 		if (context.targeting.enablePageCategories) {
 			context.targeting.pageCategories = w.wgCategories || getMercuryCategories();
 		}
 
-		// Always call DART in specific countries
-		var alwaysCallDartInCountries = instantGlobals.wgAdDriverAlwaysCallDartInCountries || [];
-		if (alwaysCallDartInCountries.indexOf(geo.getCountryCode()) > -1) {
-			context.opts.alwaysCallDart = true;
+		// Krux integration
+		if (instantGlobals.wgSitewideDisableKrux) {
+			context.targeting.enableKruxTargeting = false;
 		}
 
 		// Taboola integration
@@ -66,11 +82,20 @@ define('ext.wikia.adEngine.adContext', [
 		if (w.ads && w.ads.context) {
 			w.ads.context = context;
 		}
+
+		for (i = 0, len = callbacks.length; i < len; i += 1) {
+			callbacks[i](context);
+		}
+	}
+
+	function addCallback(callback) {
+		callbacks.push(callback);
 	}
 
 	setContext(w.ads ? w.ads.context : {});
 
 	return {
+		addCallback: addCallback,
 		getContext: getContext,
 		setContext: setContext
 	};
