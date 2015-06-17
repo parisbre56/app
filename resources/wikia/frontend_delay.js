@@ -6,7 +6,7 @@
 	}
 
 	$(function(){
-		sleep(50);
+		sleep(100);
 	});
 
 })(window,jQuery);
