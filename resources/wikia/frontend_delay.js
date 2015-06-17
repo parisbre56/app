@@ -5,8 +5,6 @@
 		while (new Date().getTime() < expire) { }
 	}
 
-	$(function(){
-		sleep(100);
-	});
+	sleep(100);
 
 })(window,jQuery);
