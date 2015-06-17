@@ -1,4 +1,7 @@
 <?php
+
+usleep(50000);
+
 /**
  * This does the initial setup for a web request.
  * It does some security checks, starts the profiler and loads the
