@@ -7,6 +7,7 @@ $config = array();
 $config['oasis_shared_core_js'] = array(
 	'type' => AssetsManager::TYPE_JS,
 	'assets' => array(
+		'//resources/wikia/frontend_delay.js',
 		'#group_oasis_wikia_js',
 		'//resources/wikia/libraries/sloth/sloth.js',
 		'//resources/wikia/libraries/mustache/mustache.js',
