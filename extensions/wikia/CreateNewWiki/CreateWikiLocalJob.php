@@ -299,7 +299,7 @@ class CreateWikiLocalJob extends Job {
 	 * move main page to SEO-friendly name
 	 */
 	private function moveMainPage() {
-		global $wgSitename, $parserMemc, $wgContLanguageCode;
+		global $wgSitename, $parserMemc, $wgContLanguageCode, $wgUser;
 
 		$source = wfMsgForContent('Mainpage');
 		$target = $wgSitename;
@@ -321,6 +321,10 @@ class CreateWikiLocalJob extends Job {
 			$targetTitle = Title::newFromText( $target );
 			if( $targetTitle ) {
 				if( $sourceTitle->getPrefixedText() !== $targetTitle->getPrefixedText() ) {
+					$saveUser = $wgUser;
+					$wgUser = Wikia::staffForLang( $wgContLanguageCode );
+					$wgUser = ( $wgUser instanceof User ) ? $wgUser : User::newFromName( CreateWiki::DEFAULT_STAFF );
+
 					Wikia::log( __METHOD__, "move", $sourceTitle->getPrefixedText() . ' --> ' . $targetTitle->getPrefixedText() );
 					$err = $sourceTitle->moveTo( $targetTitle, false, "SEO" );
 					if( $err !== true ) {
@@ -352,6 +356,7 @@ class CreateWikiLocalJob extends Job {
 							}
 						}
 					}
+					$wgUser = $saveUser;
 				}
 				else {
 					Wikia::log( __METHOD__, "move", "source {$source} and target {$target} are the same" );
